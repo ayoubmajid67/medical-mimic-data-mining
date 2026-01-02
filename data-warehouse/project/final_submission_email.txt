@@ -1,0 +1,34 @@
+Subject: Final Project Submission - Data Mining (5IIR16) - Medical Data Warehouse
+
+Dear Professor Achraf Lyazidi,
+
+I hope this email finds you well.
+
+I am writing to formally submit the final project for the "Contrôle de Matière de Data Mining" (5IIR16).
+
+**Project Title:** Medical Mimic Data Mining - End-to-End Data Warehouse
+**Team Members (Binome):**
+*   Ayoub Majjid
+*   Ayman El Hilali
+
+We are pleased to announce that we have successfully designed and implemented a comprehensive Data Warehouse solution using the Medallion Architecture (Bronze/Silver/Gold). This project transforms raw MIMIC-III clinical data into actionable business intelligence and AI-ready features.
+
+**Key Deliverables:**
+1.  **Technical Report:** A detailed breakdown of the architecture, data modeling, and analysis (attached).
+2.  **Source Code:** Fully open-source and documented on GitHub.
+    *   **Repository:** [https://github.com/ayoubmajid67/medical-mimic-data-mining](https://github.com/ayoubmajid67/medical-mimic-data-mining)
+
+We successfully implemented:
+*   **Bronze Layer:** Robust ingestion of CSV data with strict typing.
+*   **Silver Layer:** Data cleaning, unit standardization, and event merging.
+*   **Gold Layer:** Star Schema modeling for high-performance analytics.
+*   **BI & AI:** Patient demographics, ICU performance metrics, and strategic business recommendations.
+
+We deeply appreciate your guidance throughout this course, which gave us the theoretical foundation to build this system. We decided to keep the repository open-source to help future students and the community.
+
+Thank you for your time and mentorship.
+
+Sincerely,
+
+Ayoub Majjid & Ayman El Hilali
+EMSI - 5IIR16

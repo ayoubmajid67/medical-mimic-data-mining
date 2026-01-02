@@ -1,0 +1,72 @@
+name: mimic-data-warehouse-composer
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: mimic_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mimic_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mimic_password}
+      POSTGRES_DB: ${POSTGRES_DB:-mimic_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init_db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mimic_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mimic_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: mimic_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@mimic.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - mimic_network
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mimic_app
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mimic_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mimic_password}
+      POSTGRES_DB: ${POSTGRES_DB:-mimic_db}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      ENV: ${ENV:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      CSV_DATA_PATH: /app/dataset
+      BATCH_SIZE: ${BATCH_SIZE:-1000}
+    volumes:
+      - ./dataset:/app/dataset:ro
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - mimic_network
+    command: ["python", "-m", "scripts.init_db"]
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  mimic_network:
+    driver: bridge
